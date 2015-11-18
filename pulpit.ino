@@ -1,3 +1,11 @@
+/*
+ * 
+ * 
+ * CHANGELOG
+ * v.1.0.1 poprawiłem kod nie zapominaj o ";" reformat kodu
+ * przetestuj czy działa.
+ */
+
 //wysyłka danych do remote
 
 #include <RF22.h>
@@ -6,25 +14,26 @@
 #include <RF22ReliableDatagram.h>
 #include <RF22Router.h>
 
-RF22 rf22
+//inicjalizacja
+RF22 rf22;
+
 //zmienne
-Int TX = 73
+int TX = 73;
 
 //funkcje
 void setup(){
-rf22.setFrequency(434.0);
-rf22.setTxPower(RF22_TXPOW_17DBM);   
+  rf22.setFrequency(434.0);
+  rf22.setTxPower(RF22_TXPOW_17DBM);   
 }
 
 void send_data(){
-TX
+  //TX
+  rf22.send((uint8_t*)&TX, sizeof(TX));
 } 
 
 void loop(){
-  
-//tutaj wysylka danych przez radio
-  send_data()
-//orginalna komenda z programu pilot
-  rf22.send((uint8_t*)&a, sizeof(a));
+  //tutaj wysylka danych przez radio
+  send_data();
+  //orginalna komenda z programu pilot
   delay(1000); 
 }
