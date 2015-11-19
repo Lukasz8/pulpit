@@ -7,7 +7,7 @@
  */
 
 //wysyłka danych do remote
-
+#include <SPI.h>
 #include <RF22.h>
 #include <RF22Datagram.h>
 #include <RF22Mesh.h>
@@ -22,7 +22,7 @@ int TX = 73;
 
 //funkcje
 void setup(){
-  rf22.setFrequency(434.0);
+  rf22.setFrequency(434.5);
   rf22.setTxPower(RF22_TXPOW_17DBM);   
 }
 
