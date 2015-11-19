@@ -22,11 +22,14 @@ int TX = 73;
 
 //funkcje
 <<<<<<< HEAD
+<<<<<<< HEAD
 void setup(){
   rf22.setFrequency(434.5);
   rf22.setTxPower(RF22_TXPOW_17DBM);   
 }
 
+=======
+>>>>>>> origin/master
 =======
 >>>>>>> origin/master
 void send_data(){
