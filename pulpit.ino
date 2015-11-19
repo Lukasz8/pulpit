@@ -21,16 +21,19 @@ RF22 rf22;
 int TX = 73;
 
 //funkcje
-void setup(){
-  rf22.setFrequency(434.0);
-  rf22.setTxPower(RF22_TXPOW_17DBM);   
-}
-
 void send_data(){
   //TX
   rf22.send((uint8_t*)&TX, sizeof(TX));
-} 
+}
 
+//startup sequence
+void setup(){
+  rf22.setFrequency(434.0);
+  rf22.setTxPower(RF22_TXPOW_17DBM);  
+  rf22.init(); 
+}
+
+infinity loop
 void loop(){
   //tutaj wysylka danych przez radio
   send_data();
