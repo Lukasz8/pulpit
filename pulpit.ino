@@ -24,9 +24,9 @@ int TX = 73;
 void send_data(){
   //TX
   rf22.send((uint8_t*)&TX, sizeof(TX));
-  //rf22.waitPacketSent();
+  rf22.waitPacketSent();
   //tu sie program zatrzymuje - zatem nic nie wysyla
-  //moim zdaniem czeka na potwierdzenie z odbiornika jakieś ACK czy coś.
+  //ok tutaj masz przykład http://majsterkowo.pl/pierwsze-kroki-z-rfm22-sheld/
   Serial.print("funkcje  ");
 }
 
