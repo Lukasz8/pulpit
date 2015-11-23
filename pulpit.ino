@@ -1,4 +1,8 @@
-//wysyłka danych do remote
+/*
+SP8XCE & SQ9MDD
+PULPIT 
+*/
+//wysyłka danych do remote + potwierdzenie odbioru
 #include <SPI.h>
 #include <RF22.h>
 //#include <RF22Datagram.h>
@@ -12,9 +16,6 @@ RF22 rf22;
 //zmienne
 int TX = 7399;
 int RX;
-//int f1 = 434.50
-//int f2 = 436.50
-//int f3 = 438.50 kombinuje tak aby moc z pilota zmienic QRG, natomiast odbiorniki w przypadku 10 blednych prob same powinny poszukac na zapasowych czestotliwosciach
 
 //funkcje
 void send_data(){
@@ -49,7 +50,6 @@ void setup(){
   if (!rf22.init()){
     Serial.println("RF22 init failed");
   }
-   //wpis w tym miejscu musi byc, tak zrobiony aby po 10 sekundach system przeszedl na zapasowa QRG
   rf22.setFrequency(434.50);
   rf22.setTxPower(RF22_TXPOW_17DBM);  
   Serial.print("startup");
