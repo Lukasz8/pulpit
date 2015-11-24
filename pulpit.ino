@@ -2,7 +2,7 @@
 SP8XCE & SQ9MDD
 PULPIT 
 */
-//wysyłka danych + potwierdzenie odbioru
+//wysyłka danych oraz potwierdzenie odbioru
 #include <SPI.h>
 #include <RF22.h>
 //#include <RF22Datagram.h>
