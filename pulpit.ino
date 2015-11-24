@@ -1,6 +1,9 @@
 /*
 SP8XCE & SQ9MDD
 PULPIT 
+
+CHANGELOG
+2015.11.24 - poprawki i synchronizacja kodu
 */
 //wysyłka danych oraz potwierdzenie odbioru
 #include <SPI.h>
