@@ -3,23 +3,40 @@ SP8XCE & SQ9MDD
 PULPIT 
 
 CHANGELOG
+2015.11.29 - dolozenie obslugi przyciskow i funkcji ich kalibracji
 2015.11.24 - poprawki i synchronizacja kodu
 */
+
 //wysyłka danych oraz potwierdzenie odbioru
 #include <SPI.h>
 #include <RF22.h>
-//#include <RF22Datagram.h>
-//#include <RF22Mesh.h>
-//#include <RF22ReliableDatagram.h>
-//#include <RF22Router.h>
 
 //inicjalizacja
 RF22 rf22;
 
 //zmienne
-int TX = 7399;
+int przycisk = 0;
+int wejscie_pomiarowe_przycisku = A0;    //pomiar na dzielniku napiecia
+int TX = 10131;
 int RX;
 
+//wybor przycisku
+int set_przycisk(){
+  int przycisk = 0;
+  int pomiar = analogRead(wejscie_pomiarowe_przycisku);
+  //Serial.println(pomiar); //odkomentuj do kalibracji
+  if(pomiar <= 0) przycisk = 0;
+  if(pomiar >= 900 && pomiar <= 970) przycisk = 1; 
+  if(pomiar >= 800 && pomiar <= 900) przycisk = 2; 
+  if(pomiar >= 740 && pomiar <= 800) przycisk = 3;
+  if(pomiar >= 670 && pomiar <= 740) przycisk = 4; 
+  if(pomiar >= 620 && pomiar <= 670) przycisk = 5; 
+  if(pomiar >= 580 && pomiar <= 620) przycisk = 6; 
+  //if(pomiar >= 270 && pomiar <= 300) przycisk = 7; 
+  //if(pomiar >= 300 && pomiar <= 330) przycisk = 8; 
+  return(przycisk+10); 
+  }
+  
 //funkcje
 void send_data(){
   //TX
@@ -62,7 +79,10 @@ void setup(){
 void loop(){
   //tutaj wysylka danych przez radio
   send_data();
-  Serial.print(" infinity ");
-  //ulatwia synchronizowanie odbiornika po zaniku sygnalu
+  //aby skalibrować drabinke z adresem odkomentuj i czytaj wartości
+  //przycisk = set_przycisk();
+  //delay(1000);
+  //tylko do kalibracji
+  
   delay(100); 
 }
