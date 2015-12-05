@@ -10,6 +10,7 @@ DATA FRAME FORMAT
 
 CHANGELOG
 
+2015.12.05 - obsługa wysyłki ramki sterującej po przycisnieciu przycisku
 2015.11.29 - dolozenie obslugi przyciskow i funkcji ich kalibracji
 2015.11.26 - format ramki danych sprawdzenie poprawności odbioru danych z remote'a
 2015.11.24 - poprawki i synchronizacja kodu
@@ -29,21 +30,35 @@ int TX;
 int RX;
 
 //wybor przycisku
-int set_przycisk(){
+void read_przycisk(){
   int przycisk = 0;
   int pomiar = analogRead(wejscie_pomiarowe_przycisku);
   //Serial.println(pomiar); //odkomentuj do kalibracji
-  if(pomiar <= 0) przycisk = 0;
-  if(pomiar >= 900 && pomiar <= 970) przycisk = 1; 
-  if(pomiar >= 800 && pomiar <= 900) przycisk = 2; 
-  if(pomiar >= 740 && pomiar <= 800) przycisk = 3;
-  if(pomiar >= 670 && pomiar <= 740) przycisk = 4; 
-  if(pomiar >= 620 && pomiar <= 670) przycisk = 5; 
-  if(pomiar >= 580 && pomiar <= 620) przycisk = 6; 
-  //if(pomiar >= 270 && pomiar <= 580) przycisk = 7; 
-  //if(pomiar >= 300 && pomiar <= 330) przycisk = 8; 
-  return(przycisk+10); 
+  if(pomiar >= 900 && pomiar <= 970){ 
+      send_data(10111); //przycisk = 1; 
+      delay(100);
   }
+  if(pomiar >= 800 && pomiar <= 900){
+    send_data(10121); //przycisk = 2;
+    delay(100); 
+  }
+  if(pomiar >= 740 && pomiar <= 800){
+    send_data(10131); //przycisk = 3;
+    delay(100);
+  }
+  if(pomiar >= 670 && pomiar <= 740){
+    send_data(10141); //przycisk = 4; 
+    delay(100);
+  }
+  if(pomiar >= 620 && pomiar <= 670){
+    send_data(10151); //przycisk = 5; 
+    delay(100);
+  }
+  if(pomiar >= 580 && pomiar <= 620){
+    send_data(10161); //przycisk = 6; 
+    delay(100);
+  }
+ }
   
 //funkcje
 void send_data(int TX){
@@ -84,19 +99,7 @@ void setup(){
   Serial.print("startup");
 }
 
-//infinity loop
+//pę0ltka glowna
 void loop(){
-  //tutaj wysylka danych przez radio
- //send_data();
- 
-  //aby skalibrować drabinke z adresem odkomentuj i czytaj wartości
-  //przycisk = set_przycisk();
-  //delay(1000);
-  //tylko do kalibracji
-  
-  send_data(10111); //wysyłam dane patrz format ramki w komentarzu na górze
-  
-  Serial.print(" infinity ");
-
-  delay(100); 
+  read_przycisk();
 }
