@@ -9,7 +9,7 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
-
+2015.12.06 - mozliwosc wpisania sekwencji 16x3, linia 44 konczy pokaz totez wazne aby sie stan zgadzal z tablica
 2015.12.05 - wyzwalanie sekwencji odpalenia
 2015.12.05 - obsługa wysyłki ramki sterującej po przycisnieciu przycisku
 2015.11.29 - dolozenie obslugi przyciskow i funkcji ich kalibracji
@@ -26,8 +26,8 @@ RF22 rf22;
 
 //tablice kolejności i zwłok czasowych
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
-int tablica[16] = {10111,10191,10131,10141,10151,10161,10171,10181,10121,10201,10211,1022,10231,10241,10251,10261};
-int interwa[16] = {1000,1000,3000,1000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10};
+int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
+int interwa[48] = {6000,0,0,9000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10,7000};
 
 
 //zmienne
@@ -41,7 +41,7 @@ int flaga  = 0;
 void play_show(){
   if(flaga == 0){
     Serial.println("Start Pokazu");
-    for(int licznik = 0; licznik < 16; licznik++){
+    for(int licznik = 0; licznik < 17; licznik++){
        Serial.print(tablica[licznik]);
        Serial.print(";");
        Serial.println(interwa[licznik]); 
