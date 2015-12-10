@@ -9,7 +9,8 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
-2015.12.06 - mozliwosc wpisania sekwencji 16x3, linia 44 konczy pokaz totez wazne aby sie stan zgadzal z tablica
+2015.12.10 - drugi przycisk steruje sekwencją ręczną
+2015.12.06 - mozliwosc wpisania sekwencji 16x3, linia 44 konczy pokaz totez wazne aby sie stan zgadzal z tablica !! PAMIETAJ Że TABLICE MUSZA MIEC TE SAME ILOŚCI ZMIENNYCH!!!
 2015.12.05 - wyzwalanie sekwencji odpalenia
 2015.12.05 - obsługa wysyłki ramki sterującej po przycisnieciu przycisku
 2015.11.29 - dolozenie obslugi przyciskow i funkcji ich kalibracji
@@ -29,6 +30,7 @@ RF22 rf22;
 int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
 int interwa[48] = {6000,0,0,9000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10,7000};
 
+int tablica_reczna[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
 
 //zmienne
 int przycisk = 0;
@@ -36,6 +38,7 @@ int wejscie_pomiarowe_przycisku = A0;    //pomiar na dzielniku napiecia
 int TX;
 int RX;
 int flaga  = 0;
+int licznik_reczny = 0;
 
 //funkcja odtwarzania pokazu
 void play_show(){
@@ -55,6 +58,19 @@ void play_show(){
   } 
 }
 
+//funkcja odtwarzania pokazu ręcznego
+void execute_step(){
+  Serial.print("SEND "); 
+ 
+  //wywolanie procedury odpalenia odpowiedniego wyjscia
+  send_data(tablica[licznik_reczny]);
+  Serial.print(tablica[licznik_reczny]);
+  delay(100);
+
+  licznik_reczny++;
+  Serial.println(" OK"); 
+}
+
 //wybor przycisku
 void read_przycisk(){
   int przycisk = 0;
@@ -65,7 +81,7 @@ void read_przycisk(){
       delay(100);
   }
   if(pomiar >= 800 && pomiar <= 900){
-    send_data(10121); //przycisk = 2;
+    execute_step(); //przycisk = 2;
     delay(100); 
   }
   if(pomiar >= 740 && pomiar <= 800){
