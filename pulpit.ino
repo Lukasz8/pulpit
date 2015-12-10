@@ -27,9 +27,12 @@ RF22 rf22;
 
 //tablice kolejności i zwłok czasowych
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
+//tablica odpalania automatycznego
 int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
 int interwa[48] = {6000,0,0,9000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10,7000};
 
+//XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
+//tablica odpalania recznego przycisk nr 2
 int tablica_reczna[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
 
 //zmienne
@@ -63,8 +66,8 @@ void execute_step(){
   Serial.print("SEND "); 
  
   //wywolanie procedury odpalenia odpowiedniego wyjscia
-  send_data(tablica[licznik_reczny]);
-  Serial.print(tablica[licznik_reczny]);
+  send_data(tablica_reczna[licznik_reczny]);
+  Serial.print(tablica_reczna[licznik_reczny]);
   delay(100);
 
   licznik_reczny++;
