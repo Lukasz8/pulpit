@@ -9,6 +9,7 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
+2015.12.22 - poprawiono odwolanie do tabliczy sekwencji recznej, dodano opisy do pojedynczych klawiszy
 2015.12.10 - drugi przycisk steruje sekwencją ręczną
 2015.12.06 - mozliwosc wpisania sekwencji 16x3, linia 44 konczy pokaz totez wazne aby sie stan zgadzal z tablica !! PAMIETAJ Że TABLICE MUSZA MIEC TE SAME ILOŚCI ZMIENNYCH!!!
 2015.12.05 - wyzwalanie sekwencji odpalenia
@@ -27,9 +28,14 @@ RF22 rf22;
 
 //tablice kolejności i zwłok czasowych
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
+<<<<<<< HEAD
 //tablica odpalania automatycznego
 int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
 int interwa[48] = {6000,0,0,9000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10,7000};
+=======
+int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,13151};
+int interwa[48] = {600,0,0,900,500,100,100,100,100,100,300,100,500,100,100,10};
+>>>>>>> origin/master
 
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 //tablica odpalania recznego przycisk nr 2
@@ -63,15 +69,19 @@ void play_show(){
 
 //funkcja odtwarzania pokazu ręcznego
 void execute_step(){
-  Serial.print("SEND "); 
+  Serial.print("Reczna Sekwencja "); 
  
   //wywolanie procedury odpalenia odpowiedniego wyjscia
+<<<<<<< HEAD
   send_data(tablica_reczna[licznik_reczny]);
   Serial.print(tablica_reczna[licznik_reczny]);
+=======
+  Serial.println(tablica_reczna[licznik_reczny]);
+  send_data(tablica_reczna[licznik_reczny]);
+>>>>>>> origin/master
   delay(100);
 
   licznik_reczny++;
-  Serial.println(" OK"); 
 }
 
 //wybor przycisku
@@ -80,26 +90,30 @@ void read_przycisk(){
   int pomiar = analogRead(wejscie_pomiarowe_przycisku);
   //Serial.println(pomiar); //odkomentuj do kalibracji
   if(pomiar >= 900 && pomiar <= 970){ 
-      play_show(); // zamiast send data odpalam sekwencje send_data(10111); //przycisk = 1; 
+      play_show(); // przycisk = 1 / zamiast send data odpalam automatyczna sekwencje;
       delay(100);
   }
   if(pomiar >= 800 && pomiar <= 900){
-    execute_step(); //przycisk = 2;
+    execute_step(); //przycisk = 2 / recznie odpalam kolejne elementy sekwencji;
     delay(100); 
   }
   if(pomiar >= 740 && pomiar <= 800){
+    Serial.print("przycisk 3 ");
     send_data(10131); //przycisk = 3;
     delay(100);
   }
   if(pomiar >= 670 && pomiar <= 740){
+    Serial.print("przycisk 4 ");
     send_data(10141); //przycisk = 4; 
     delay(100);
   }
   if(pomiar >= 620 && pomiar <= 670){
+    Serial.print("przycisk 5 ");
     send_data(10151); //przycisk = 5; 
     delay(100);
   }
   if(pomiar >= 580 && pomiar <= 620){
+    Serial.print("przycisk 6 ");
     send_data(10161); //przycisk = 6; 
     delay(100);
   }
