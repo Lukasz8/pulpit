@@ -9,6 +9,7 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
+2015.12.22 - scalenie kodu 
 2015.12.22 - poprawiono odwolanie do tabliczy sekwencji recznej, dodano opisy do pojedynczych klawiszy
 2015.12.10 - drugi przycisk steruje sekwencją ręczną
 2015.12.06 - mozliwosc wpisania sekwencji 16x3, linia 44 konczy pokaz totez wazne aby sie stan zgadzal z tablica !! PAMIETAJ Że TABLICE MUSZA MIEC TE SAME ILOŚCI ZMIENNYCH!!!
@@ -28,14 +29,10 @@ RF22 rf22;
 
 //tablice kolejności i zwłok czasowych
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
-<<<<<<< HEAD
+
 //tablica odpalania automatycznego
-int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
-int interwa[48] = {6000,0,0,9000,500,1000,100,100,1000,1000,3000,1000,500,1000,100,10,7000};
-=======
 int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,13151};
 int interwa[48] = {600,0,0,900,500,100,100,100,100,100,300,100,500,100,100,10};
->>>>>>> origin/master
 
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 //tablica odpalania recznego przycisk nr 2
@@ -69,18 +66,11 @@ void play_show(){
 
 //funkcja odtwarzania pokazu ręcznego
 void execute_step(){
-  Serial.print("Reczna Sekwencja "); 
- 
+  Serial.print("Reczna Sekwencja ");  
   //wywolanie procedury odpalenia odpowiedniego wyjscia
-<<<<<<< HEAD
-  send_data(tablica_reczna[licznik_reczny]);
-  Serial.print(tablica_reczna[licznik_reczny]);
-=======
   Serial.println(tablica_reczna[licznik_reczny]);
   send_data(tablica_reczna[licznik_reczny]);
->>>>>>> origin/master
   delay(100);
-
   licznik_reczny++;
 }
 
@@ -158,7 +148,7 @@ void setup(){
   Serial.print("startup");
 }
 
-//pę0ltka glowna
+//pętel glowna
 void loop(){
   read_przycisk();
 }
