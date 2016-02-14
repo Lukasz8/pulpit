@@ -9,6 +9,7 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
+2016.02.13 - dopisanie drugiej recznej sekwencji oraz dodano sekwencje testu lacznosci
 2015.12.22 - scalenie kodu 
 2015.12.22 - poprawiono odwolanie do tabliczy sekwencji recznej, dodano opisy do pojedynczych klawiszy
 2015.12.10 - drugi przycisk steruje sekwencją ręczną
@@ -31,12 +32,18 @@ RF22 rf22;
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 
 //tablica odpalania automatycznego
-int tablica[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,13151};
-int interwa[48] = {600,0,0,900,500,100,100,100,100,100,300,100,500,100,100,10};
+int tablica[48] = {12261,12111,13111,13261,13201,12121,13121,12261,13261,12201,13201,12111,10131,10111,12201,10121,13261};
+int interwa[48] = {100,200,500,200,100,50,100,80,50,90,100,50,0,0,0,0};
 
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 //tablica odpalania recznego przycisk nr 2
-int tablica_reczna[48] = {10131,11111,12111,13111,10111,10161,10171,10181,10221,10201,10211,11221,10231,10241,10251,10261,10131};
+int tablica_reczna_1[48] = {12111,12121,12131,12141,12151,12161,12171,12181,12191,12201,12211,12221,12231,12241,12251,12261};
+
+//tablica odpalania recznego przycisk nr 3
+int tablica_reczna_2[48] = {13111,13121,13131,13141,13151,13161,13171,13181,13191,13201,13211,13221,13231,13241,13251,13261};
+
+//tablica sprawdzania lacznosci przycisk nr 6
+int tablica_test[48] = {10100,11100,12100,13100,14100,15100,16100,17100,18100,19100,20100,21100,22100,23100,24100,25100,26100};
 
 //zmienne
 int przycisk = 0;
@@ -44,7 +51,8 @@ int wejscie_pomiarowe_przycisku = A0;    //pomiar na dzielniku napiecia
 int TX;
 int RX;
 int flaga  = 0;
-int licznik_reczny = 0;
+int licznik_reczny_1 = 0;
+int licznik_reczny_2 = 0;
 
 //funkcja odtwarzania pokazu
 void play_show(){
@@ -64,14 +72,36 @@ void play_show(){
   } 
 }
 
-//funkcja odtwarzania pokazu ręcznego
-void execute_step(){
-  Serial.print("Reczna Sekwencja ");  
+//funkcja odtwarzania pokazu ręcznego 1
+void execute_step_1(){
+  Serial.print("Reczna Sekwencja 1 ");  
   //wywolanie procedury odpalenia odpowiedniego wyjscia
-  Serial.println(tablica_reczna[licznik_reczny]);
-  send_data(tablica_reczna[licznik_reczny]);
+  Serial.println(tablica_reczna_1[licznik_reczny_1]);
+  send_data(tablica_reczna_1[licznik_reczny_1]);
   delay(100);
-  licznik_reczny++;
+  licznik_reczny_1++;
+}
+
+//funkcja odtwarzania pokazu ręcznego 2
+void execute_step_2(){
+  Serial.print("Reczna Sekwencja 2 ");  
+  //wywolanie procedury odpalenia odpowiedniego wyjscia
+  Serial.println(tablica_reczna_2[licznik_reczny_2]);
+  send_data(tablica_reczna_2[licznik_reczny_2]);
+  delay(100);
+  licznik_reczny_2++;
+}
+
+//funkcja testowania lacznosci
+void play_test(){
+    Serial.println("Start testu lacznosci");
+    for(int licznik = 0; licznik < 17; licznik++){
+       Serial.print(tablica_test[licznik]);
+       Serial.print(";");
+       //wywolanie procedury sprawdzenia lacznosci bez odpalania wyjsc
+       send_data(tablica_test[licznik]);
+       delay(100);
+  } 
 }
 
 //wybor przycisku
@@ -80,16 +110,15 @@ void read_przycisk(){
   int pomiar = analogRead(wejscie_pomiarowe_przycisku);
   //Serial.println(pomiar); //odkomentuj do kalibracji
   if(pomiar >= 900 && pomiar <= 970){ 
-      play_show(); // przycisk = 1 / zamiast send data odpalam automatyczna sekwencje;
+      play_show(); // przycisk = 1 /  odpalam automatyczna sekwencje;
       delay(100);
   }
   if(pomiar >= 800 && pomiar <= 900){
-    execute_step(); //przycisk = 2 / recznie odpalam kolejne elementy sekwencji;
+    execute_step_1(); //przycisk = 2 / recznie odpalam kolejne elementy sekwencji;
     delay(100); 
   }
   if(pomiar >= 740 && pomiar <= 800){
-    Serial.print("przycisk 3 ");
-    send_data(10131); //przycisk = 3;
+    execute_step_2(); //przycisk = 3 / recznie odpalam kolejne elementy sekwencji;
     delay(100);
   }
   if(pomiar >= 670 && pomiar <= 740){
@@ -103,8 +132,7 @@ void read_przycisk(){
     delay(100);
   }
   if(pomiar >= 580 && pomiar <= 620){
-    Serial.print("przycisk 6 ");
-    send_data(10161); //przycisk = 6; 
+    play_test(); //przycisk = 6 / sprawdzam lacznosc z wyrzutniami sekwencja test;
     delay(100);
   }
  }
@@ -122,7 +150,7 @@ void send_data(int TX){
     if (rf22.recv(buf, &len)){
       RX = (int&)buf;
       if(RX == TX){
-        Serial.println("ACK");
+        Serial.print("ACK ");
       }else{
         Serial.println("REJ");
       }
