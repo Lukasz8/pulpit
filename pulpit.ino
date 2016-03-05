@@ -9,6 +9,7 @@ DATA FRAME FORMAT
   // Z  - komenda 1 - ON 0 - OFF
 
 CHANGELOG
+2016.03.05 - obsluga wyswietlacza LCD
 2016.02.13 - dopisanie drugiej recznej sekwencji oraz dodano sekwencje testu lacznosci
 2015.12.22 - scalenie kodu 
 2015.12.22 - poprawiono odwolanie do tabliczy sekwencji recznej, dodano opisy do pojedynczych klawiszy
@@ -24,26 +25,28 @@ CHANGELOG
 //wysyłka danych oraz potwierdzenie odbioru
 #include <SPI.h>
 #include <RF22.h>
+#include <LiquidCrystal.h>
 
 //inicjalizacja
 RF22 rf22;
+LiquidCrystal lcd(8, 7, 6, 5, 4, 3);
 
 //tablice kolejności i zwłok czasowych
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 
-//tablica odpalania automatycznego
+//tablica odpalania automatycznego przycisk nr 1
 int tablica[48] = {12261,12111,13111,13261,13201,12121,13121,12261,13261,12201,13201,12111,10131,10111,12201,10121,13261};
 int interwa[48] = {100,200,500,200,100,50,100,80,50,90,100,50,0,0,0,0};
 
 //XXYYZ XX - adres sterownika YY - adres wyjscia Z - komenda odpal
 //tablica odpalania recznego przycisk nr 2
-int tablica_reczna_1[48] = {12111,12121,12131,12141,12151,12161,12171,12181,12191,12201,12211,12221,12231,12241,12251,12261};
+int tablica_reczna_1[48] = {26111,26121,26131,26141,26151,26161,26171,26181,26191,26201,26211,26221,26231,26241,26251,26261};
 
 //tablica odpalania recznego przycisk nr 3
-int tablica_reczna_2[48] = {13111,13121,13131,13141,13151,13161,13171,13181,13191,13201,13211,13221,13231,13241,13251,13261};
+int tablica_reczna_2[48] = {10111,10121,10131,13141,13151,13161,13171,13181,13191,13201,13211,13221,13231,13241,13251,13261};
 
 //tablica sprawdzania lacznosci przycisk nr 6
-int tablica_test[48] = {10100,11100,12100,13100,14100,15100,16100,17100,18100,19100,20100,21100,22100,23100,24100,25100,26100};
+int tablica_test[48] = {10100,11100,12100,13100,14100,15100,16100,17100,18100,19100,20100,21100,22100,23100,24100,25100};
 
 //zmienne
 int przycisk = 0;
@@ -57,51 +60,80 @@ int licznik_reczny_2 = 0;
 //funkcja odtwarzania pokazu
 void play_show(){
   if(flaga == 0){
-    Serial.println("Start Pokazu");
+    lcd.setCursor(0, 0);
+    lcd.print("Odtwarzanie Pokazu    ");
     for(int licznik = 0; licznik < 17; licznik++){
-       Serial.print(tablica[licznik]);
-       Serial.print(";");
-       Serial.println(interwa[licznik]); 
-       
+       lcd.setCursor(0, 1);
+       lcd.print(tablica[licznik]);
+       lcd.print(";");
+       lcd.print(interwa[licznik]); 
        //wywolanie procedury odpalenia odpowiedniego wyjscia
        send_data(tablica[licznik]);
        delay(interwa[licznik]);
     } 
    flaga = 1; 
-   Serial.println("Koniec Pokazu");
+   lcd.setCursor(0, 3);
+   lcd.print("Koniec Pokazu");
+   delay(3000);
+   lcd.clear();	
   } 
 }
 
 //funkcja odtwarzania pokazu ręcznego 1
 void execute_step_1(){
-  Serial.print("Reczna Sekwencja 1 ");  
+  lcd.setCursor(0, 0);
+  lcd.print("Reczna Sekwencja 1  ");
   //wywolanie procedury odpalenia odpowiedniego wyjscia
-  Serial.println(tablica_reczna_1[licznik_reczny_1]);
+  lcd.setCursor(0, 1);
+  lcd.print(tablica_reczna_1[licznik_reczny_1]);
   send_data(tablica_reczna_1[licznik_reczny_1]);
   delay(100);
   licznik_reczny_1++;
+   if (licznik_reczny_1 > 15){
+   lcd.setCursor(0, 3);
+   lcd.print("Koniec Sekwencji 1");
+   delay(3000);
+   lcd.clear();	
+   }
 }
-
+   
 //funkcja odtwarzania pokazu ręcznego 2
 void execute_step_2(){
-  Serial.print("Reczna Sekwencja 2 ");  
+  lcd.setCursor(0, 0);
+  lcd.print("Reczna Sekwencja 2  ");  
   //wywolanie procedury odpalenia odpowiedniego wyjscia
-  Serial.println(tablica_reczna_2[licznik_reczny_2]);
+  lcd.setCursor(0, 1);
+  lcd.print(tablica_reczna_2[licznik_reczny_2]);
   send_data(tablica_reczna_2[licznik_reczny_2]);
   delay(100);
   licznik_reczny_2++;
+   if (licznik_reczny_2 > 15){
+   lcd.setCursor(0, 3);
+   lcd.print("Koniec Sekwencji 2");
+   delay(3000);
+   lcd.clear();	
+   }
 }
 
 //funkcja testowania lacznosci
 void play_test(){
-    Serial.println("Start testu lacznosci");
-    for(int licznik = 0; licznik < 17; licznik++){
-       Serial.print(tablica_test[licznik]);
-       Serial.print(";");
+    lcd.setCursor(0, 0);
+    lcd.print("Test Lacznosci     ");
+    for(int licznik = 0; licznik < 16; licznik++){
+       lcd.setCursor(0, 1);
+       lcd.print(tablica_test[licznik]);
+       lcd.print(";");
        //wywolanie procedury sprawdzenia lacznosci bez odpalania wyjsc
        send_data(tablica_test[licznik]);
-       delay(100);
-  } 
+       delay(1000);
+    }
+    lcd.setCursor(0, 3);
+    lcd.print("Koniec Testu      ");
+    delay(3000); 
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Gotowy do pokazu :) "); 
+    	
 }
 
 //wybor przycisku
@@ -122,12 +154,12 @@ void read_przycisk(){
     delay(100);
   }
   if(pomiar >= 670 && pomiar <= 740){
-    Serial.print("przycisk 4 ");
+    lcd.print("przycisk 4 ");
     send_data(10141); //przycisk = 4; 
     delay(100);
   }
   if(pomiar >= 620 && pomiar <= 670){
-    Serial.print("przycisk 5 ");
+    lcd.print("przycisk 5 ");
     send_data(10151); //przycisk = 5; 
     delay(100);
   }
@@ -144,24 +176,25 @@ void send_data(int TX){
   rf22.send((uint8_t*)&TX, sizeof(TX));
   rf22.waitPacketSent();
   //RX
+  lcd.setCursor(0, 2);
   uint8_t buf[RF22_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
   if (rf22.waitAvailableTimeout(500)){ 
     if (rf22.recv(buf, &len)){
       RX = (int&)buf;
       if(RX == TX){
-        Serial.print("ACK ");
+        lcd.print("    ACK ");
       }else{
-        Serial.println("REJ");
+        lcd.print("    REJ ");
       }
-      Serial.println(RX);      
+      lcd.print(RX);      
     }
     else{
-        Serial.println("blad obierania");
+        lcd.print("blad obioru     ");
     }
    }
    else{
-     Serial.println("brak sygnalow");
+     lcd.print("brak sygnalu     ");
    }
 }
 
@@ -169,14 +202,15 @@ void send_data(int TX){
 void setup(){
   Serial.begin(9600);
   if (!rf22.init()){
-    Serial.println("RF22 init failed");
+    lcd.print("RF22 init failed");
   }
   rf22.setFrequency(434.50);
-  rf22.setTxPower(RF22_TXPOW_17DBM);  
-  Serial.print("startup");
+  rf22.setTxPower(RF22_TXPOW_2DBM);
+  lcd.begin(20, 4);
+  lcd.print("startup ");
 }
 
-//pętel glowna
+//pętla glowna
 void loop(){
   read_przycisk();
 }
