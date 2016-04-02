@@ -141,29 +141,29 @@ void read_przycisk(){
   int przycisk = 0;
   int pomiar = analogRead(wejscie_pomiarowe_przycisku);
   //Serial.println(pomiar); //odkomentuj do kalibracji
-  if(pomiar >= 900 && pomiar <= 970){ 
+  if(pomiar >= 305 && pomiar <= 313){ 
       play_show(); // przycisk = 1 /  odpalam automatyczna sekwencje;
       delay(100);
   }
-  if(pomiar >= 800 && pomiar <= 900){
+  if(pomiar >= 317 && pomiar <= 325){
     execute_step_1(); //przycisk = 2 / recznie odpalam kolejne elementy sekwencji;
     delay(100); 
   }
-  if(pomiar >= 740 && pomiar <= 800){
+  if(pomiar >= 328 && pomiar <= 336){
     execute_step_2(); //przycisk = 3 / recznie odpalam kolejne elementy sekwencji;
     delay(100);
   }
-  if(pomiar >= 670 && pomiar <= 740){
+  if(pomiar >= 346 && pomiar <= 353){
     lcd.print("przycisk 4 ");
     send_data(10141); //przycisk = 4; 
     delay(100);
   }
-  if(pomiar >= 620 && pomiar <= 670){
+  if(pomiar >= 355 && pomiar <= 366){
     lcd.print("przycisk 5 ");
     send_data(10151); //przycisk = 5; 
     delay(100);
   }
-  if(pomiar >= 580 && pomiar <= 620){
+  if(pomiar >= 374 && pomiar <= 382){
     play_test(); //przycisk = 6 / sprawdzam lacznosc z wyrzutniami sekwencja test;
     delay(100);
   }
